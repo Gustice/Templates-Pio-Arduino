@@ -1,19 +1,21 @@
+#include "StatusLed.h"
 #include <Arduino.h>
 
-const int LedPin = LED_BUILTIN;
-const int BlinkTime = 250;
+const int BlinkTime = 50;
+
+static StatusLed _statusLed(LED_BUILTIN);
 
 void setup() {
-    pinMode(LedPin, OUTPUT);
     Serial.begin(9600);
+    _statusLed.Set(StatusLed::Mode::DoubleFlash);
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
-    Serial.println("ON");
-    digitalWrite(LedPin, HIGH);
-    delay(BlinkTime);
-    Serial.println("OFF");
-    digitalWrite(LedPin, LOW);
-    delay(BlinkTime);
+    Serial.print("Tick ");
+    for (size_t i = 0; i < 16; i++) {
+        Serial.print(".");
+        _statusLed.Tick();
+        delay(BlinkTime);
+    }
+    Serial.println("");
 }
