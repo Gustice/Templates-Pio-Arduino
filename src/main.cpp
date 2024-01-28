@@ -1,5 +1,4 @@
-#include "StatusLed.h"
-#include <Arduino.h>
+#include "main.hpp"
 
 const int BlinkTime = 50;
 
@@ -16,12 +15,14 @@ void setup() {
     _statusLed.Set(StatusLed::Mode::DoubleFlash);
 }
 
+static RotatingIndex<int> _tickIdx(16);
+
 void loop() {
-    Serial.print("Tick ");
-    for (size_t i = 0; i < 16; i++) {
-        Serial.print(".");
-        _statusLed.Tick();
-        delay(BlinkTime);
+    if (_tickIdx.IncrementAndCheckIfRevolves()) {
+        Serial.println("");
+        Serial.print("Tick ");
     }
-    Serial.println("");
+    Serial.print(".");
+    _statusLed.Tick();
+    delay(BlinkTime);
 }
