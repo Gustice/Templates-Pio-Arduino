@@ -3,7 +3,13 @@
 
 const int BlinkTime = 50;
 
-static StatusLed _statusLed(LED_BUILTIN);
+#ifndef INVERT_STATUS_LED
+constexpr StatusLed::LedLogic StatusLedLogic = StatusLed::LedLogic::Normal;
+#else
+constexpr StatusLed::LedLogic StatusLedLogic = StatusLed::LedLogic::Inverted;
+#endif
+
+static StatusLed _statusLed(LED_BUILTIN, StatusLedLogic);
 
 void setup() {
     Serial.begin(9600);
